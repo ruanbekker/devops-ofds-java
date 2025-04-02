@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# create new order
+# create new order linked to the restaurant
 curl -X POST http://localhost:8080/api/orders \
   -H "Content-Type: application/json" \
-  -d '{"customerName": "John Doe", "dishName": "Margherita Pizza", "status": "Pending"}'
+  -d '{"customerName": "John Doe", "dishName": "Margherita Pizza", "status": "Pending", "restaurantId": 1}'
+
 
 # list all orders
 curl http://localhost:8080/api/orders
