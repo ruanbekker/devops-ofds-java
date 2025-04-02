@@ -13,6 +13,7 @@ public class Order {
     @Id
     @GeneratedValue
     private Long id;
+    private Long restaurantId;
     private String customerName;
     private String dishName;
     private String status;
