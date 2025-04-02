@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - order-service
+      - restaurant-service
+      - delivery-service
+    networks:
+      - ofds-network
+
   postgres:
     image: postgres:15
     container_name: ofds-postgres
@@ -18,8 +32,6 @@ services:
       context: .
       dockerfile: services/order-service/Dockerfile
     container_name: order-service
-    ports:
-      - "8081:8081"
     depends_on:
       - postgres
     environment:
@@ -37,8 +49,6 @@ services:
       context: .
       dockerfile: services/restaurant-service/Dockerfile
     container_name: restaurant-service
-    ports:
-      - "8082:8082"
     depends_on:
       - postgres
     environment:
@@ -56,8 +66,6 @@ services:
       context: .
       dockerfile: services/delivery-service/Dockerfile
     container_name: delivery-service
-    ports:
-      - "8083:8083"
     depends_on:
       - postgres
     environment:
@@ -69,21 +77,6 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     networks:
       - ofds-network
-
-  gateway:
-    build:
-      context: .
-      dockerfile: gateway/Dockerfile
-    container_name: gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - order-service
-      - restaurant-service
-      - delivery-service
-    networks:
-      - ofds-network
-
 
 networks:
   ofds-network:
