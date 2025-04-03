@@ -42,5 +42,5 @@ ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
   "-Dotel.traces.exporter=otlp", \
   "-Dotel.metrics.exporter=none", \
   "-Dotel.logs.exporter=none", \
-  "-Dotel.exporter.otlp.endpoint=http://jaeger:4317", \
+  "-Dotel.exporter.otlp.endpoint=http://jaeger:4318", \
   "-jar", "app.jar"]
