@@ -12,6 +12,7 @@ services:
       - order-service
       - restaurant-service
       - delivery-service
+      - jaeger
     networks:
       - ofds-network
 
@@ -34,6 +35,7 @@ services:
     container_name: order-service
     depends_on:
       - postgres
+      - jaeger
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ofds
       SPRING_DATASOURCE_USERNAME: user
@@ -51,6 +53,7 @@ services:
     container_name: restaurant-service
     depends_on:
       - postgres
+      - jaeger
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ofds
       SPRING_DATASOURCE_USERNAME: user
@@ -68,6 +71,7 @@ services:
     container_name: delivery-service
     depends_on:
       - postgres
+      - jaeger
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ofds
       SPRING_DATASOURCE_USERNAME: user
@@ -75,6 +79,16 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - ofds-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.67.0
+    container_name: jaeger
+    ports:
+      - "16686:16686" # Jaeger UI
+      - "6831:6831/udp" # Tracing data
+      - "14250:14250" # OTLP receiver
     networks:
       - ofds-network
 
