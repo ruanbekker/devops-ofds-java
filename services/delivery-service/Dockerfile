@@ -16,6 +16,11 @@ RUN gradle :services:delivery-service:clean :services:delivery-service:bootJar -
 # Stage 2: Create a lightweight image to run the application
 FROM openjdk:17-jdk-slim
 
+# Download OpenTelemetry Java Agent
+RUN apt update; apt install curl -y
+RUN curl -L -o /opentelemetry-javaagent.jar \
+    https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.14.0/opentelemetry-javaagent.jar
+
 # Create a user to run the application
 RUN useradd -m appuser
 
@@ -31,6 +36,11 @@ EXPOSE 8083
 # Run the application as the created user
 USER appuser
 
-# Start the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
+# Start the application with opentelemetry
+ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
+  "-Dotel.service.name=delivery-service", \
+  "-Dotel.traces.exporter=otlp", \
+  "-Dotel.metrics.exporter=none", \
+  "-Dotel.logs.exporter=none", \
+  "-Dotel.exporter.otlp.endpoint=http://jaeger:4318", \
+  "-jar", "app.jar"]
