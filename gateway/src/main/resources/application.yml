@@ -22,3 +22,10 @@ spring:
           predicates:
             - Path=/api/deliveries/**
 
+logging:
+  level:
+    root: INFO
+    com.ofds.order: DEBUG  # use your package name here
+  pattern:
+    # console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{trace_id}/%X{span_id}] %-5level %logger{36} - %msg%n"
