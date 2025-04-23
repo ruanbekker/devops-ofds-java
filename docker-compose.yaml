@@ -99,5 +99,6 @@ services:
 
 networks:
   ofds-network:
+    name: ofds-network
     driver: bridge
 
