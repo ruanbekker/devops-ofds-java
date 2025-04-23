@@ -36,11 +36,15 @@ EXPOSE 8082
 # Run the application as the created user
 USER appuser
 
+# Trace Collector # http://jaeger:4318 or http://tempo:4318
+ENV TRACE_COLLECTOR_URL=http://tempo:4318
+
 # Start the application with opentelemetry
 ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
   "-Dotel.service.name=restaurant-service", \
   "-Dotel.traces.exporter=otlp", \
   "-Dotel.metrics.exporter=none", \
   "-Dotel.logs.exporter=none", \
-  "-Dotel.exporter.otlp.endpoint=http://jaeger:4318", \
+  "-Dotel.exporter.otlp.endpoint=http://tempo:4318", \
+  "-Dotel.exporter.otlp.protocol=http/protobuf", \
   "-jar", "app.jar"]
