@@ -15,10 +15,11 @@ public class DeliveryController {
     private final DeliveryRepository deliveryRepository;
     private final RestTemplate restTemplate;
 
-    public DeliveryController(DeliveryRepository deliveryRepository) {
+    public DeliveryController(DeliveryRepository deliveryRepository, RestTemplate restTemplate) {
         this.deliveryRepository = deliveryRepository;
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
     }
+
 
     @PostMapping
     public Delivery createDelivery(@RequestBody Delivery delivery) {
