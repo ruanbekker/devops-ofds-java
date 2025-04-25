@@ -18,28 +18,4 @@ scrape_configs:
         target_label: container_name
       - target_label: job
         replacement: docker
-      #- source_labels: [__meta_docker_container_id]
-      #  target_label: container_id
-      #- source_labels: [__meta_docker_container_image]
-      #  target_label: image
-      #- source_labels: [__meta_docker_container_log_path]
-      #  target_label: __path__
-
-#scrape_configs:
-#  - job_name: docker-logs
-#    static_configs:
-#      - targets:
-#          - localhost
-#        labels:
-#          job: containerlogs
-#          __path__: /var/lib/docker/containers/*/*.log
-#    pipeline_stages:
-#      - docker: {}
-#      - json:
-#          expressions:
-#            log:
-#            stream:
-#            time:
-#      - labels:
-#          stream: stream
 
