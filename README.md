@@ -180,3 +180,8 @@ Inter-Service Calls:
    - Handles both external and internal communication.
    - Provides a consistent access point to all services.
 
+## Observability
+
+### Traces
+
+![Image](https://github.com/user-attachments/assets/fd1804a3-383b-4a9d-a81c-9c116420c014)
