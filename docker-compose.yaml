@@ -4,7 +4,7 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: gateway/Dockerfile.optimized
+      dockerfile: gateway/Dockerfile
     container_name: gateway
     restart: unless-stopped
     ports:
@@ -32,7 +32,7 @@ services:
   order-service:
     build:
       context: .
-      dockerfile: services/order-service/Dockerfile.optimized
+      dockerfile: services/order-service/Dockerfile
     container_name: order-service
     restart: unless-stopped
     depends_on:
@@ -50,7 +50,7 @@ services:
   restaurant-service:
     build:
       context: .
-      dockerfile: services/restaurant-service/Dockerfile.optimized
+      dockerfile: services/restaurant-service/Dockerfile
     container_name: restaurant-service
     restart: unless-stopped
     depends_on:
@@ -68,7 +68,7 @@ services:
   delivery-service:
     build:
       context: .
-      dockerfile: services/delivery-service/Dockerfile.optimized
+      dockerfile: services/delivery-service/Dockerfile
     container_name: delivery-service
     restart: unless-stopped
     depends_on:
