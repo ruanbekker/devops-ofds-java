@@ -1,9 +1,10 @@
 package com.ofds.delivery.controller;
 
 import com.ofds.delivery.model.Delivery;
-import com.ofds.delivery.repository.DeliveryRepository;
+import com.ofds.delivery.service.DeliveryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -12,47 +13,36 @@ import java.util.Map;
 @RequestMapping("/api/deliveries")
 public class DeliveryController {
 
-    private final DeliveryRepository deliveryRepository;
-    private final RestTemplate restTemplate;
+    private static final Logger log = LoggerFactory.getLogger(DeliveryController.class);
 
-    public DeliveryController(DeliveryRepository deliveryRepository, RestTemplate restTemplate) {
-        this.deliveryRepository = deliveryRepository;
-        this.restTemplate = restTemplate;
+    private final DeliveryService deliveryService;
+
+    public DeliveryController(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
     }
-
 
     @PostMapping
     public Delivery createDelivery(@RequestBody Delivery delivery) {
-        delivery.setStatus("Pending");
-        return deliveryRepository.save(delivery);
+        log.info("Creating delivery");
+        return deliveryService.createDelivery(delivery);
     }
 
     @GetMapping
     public List<Delivery> listDeliveries() {
-        return deliveryRepository.findAll();
+        log.info("Listing deliveries");
+        return deliveryService.listDeliveries();
     }
 
     @GetMapping("/{id}")
     public Map<String, Object> getDeliveryWithOrder(@PathVariable Long id) {
-        return deliveryRepository.findById(id).map(delivery -> {
-            String orderUrl = "http://gateway:8080/api/orders/" + delivery.getOrderId();
-            Map<String, Object> order = restTemplate.getForObject(orderUrl, Map.class);
-
-            return Map.of(
-                "id", delivery.getId(),
-                "driverName", delivery.getDriverName(),
-                "status", delivery.getStatus(),
-                "order", order
-            );
-        }).orElse(null);
+        log.info("Fetching delivery with order for ID {}", id);
+        return deliveryService.getDeliveryWithOrder(id).orElse(null);
     }
 
     @PutMapping("/{id}/status")
     public Delivery updateStatus(@PathVariable Long id, @RequestBody String status) {
-        return deliveryRepository.findById(id).map(delivery -> {
-            delivery.setStatus(status);
-            return deliveryRepository.save(delivery);
-        }).orElse(null);
+        log.info("Updating status for delivery ID {}", id);
+        return deliveryService.updateStatus(id, status).orElse(null);
     }
 }
 
