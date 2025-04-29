@@ -1,45 +1,52 @@
-# Stage 1: Build the application
+# ------------ STAGE 1: Build Application ------------
 FROM gradle:8.1-jdk17 AS builder
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the root project files
-COPY ../settings.gradle ../build.gradle ./
+# Copy Gradle wrapper and config files first to optimize cache
+COPY ../settings.gradle .
+COPY ../build.gradle .
 
-# Copy the entire project
+# Pre-cache Gradle dependencies
+RUN gradle --no-daemon dependencies || true
+
+# Copy the rest of the project
 COPY ../ .
 
-# Build the application using Gradle
-RUN gradle :gateway:clean :gateway:bootJar -x test
+# Build only the gateway module
+RUN gradle :gateway:bootJar -x test --no-daemon
 
-# Stage 2: Create a lightweight image to run the application
-FROM openjdk:17-jdk-slim
+
+# ------------ STAGE 2: Runtime Environment ------------
+FROM openjdk:17-jdk-slim AS runtime
+
+# Install curl and clean up in the same layer to reduce image size
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Download OpenTelemetry Java Agent
-RUN apt update; apt install curl -y
 RUN curl -L -o /opentelemetry-javaagent.jar \
     https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.14.0/opentelemetry-javaagent.jar
 
-# Create a user to run the application
+# Create a non-root user for security best practices
 RUN useradd -m appuser
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the built JAR file from the build stage
+# Copy the JAR built in the previous stage
 COPY --from=builder /app/gateway/build/libs/*.jar app.jar
 
-# Expose the application port
+# Expose port
 EXPOSE 8080
 
-# Run the application as the created user
+# Switch to non-root user
 USER appuser
 
-# Trace Collector # http://jaeger:4318 or http://tempo:4318
-ENV TRACE_COLLECTOR_URL=http://tempo:4318 
+# Optional: Define collector URL as env variable
+ENV TRACE_COLLECTOR_URL=http://tempo:4318
 
-# Start the application with opentelemetry
+# Start the app with OpenTelemetry agent
 ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
   "-Dotel.service.name=api-gateway", \
   "-Dotel.traces.exporter=otlp", \
@@ -48,3 +55,4 @@ ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
   "-Dotel.exporter.otlp.endpoint=http://tempo:4318", \
   "-Dotel.exporter.otlp.protocol=http/protobuf", \
   "-jar", "app.jar"]
+

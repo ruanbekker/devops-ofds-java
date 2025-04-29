@@ -1,14 +1,19 @@
-# Detect docker compose command (either `docker compose` or legacy `docker-compose`)
-DOCKER_COMPOSE := $(shell command -v "docker compose" >/dev/null 2>&1 && echo "docker compose" || echo "docker-compose")
+# Detect docker compose CLI variant
+ifeq (, $(shell which docker-compose 2>/dev/null))
+  ifeq (, $(shell docker compose version 2>/dev/null))
+    $(error ❌ docker-compose or docker compose is required but not found)
+  endif
+  DC := docker compose
+else
+  DC := docker-compose
+endif
 
 # Compose files
 COMPOSE_FILES := -f docker-compose.yaml
 COMPOSE_FILES_OBS := -f docker-compose.yaml -f docker-compose.observability.yaml
 
-# Default target
 .DEFAULT_GOAL := help
 
-# Help target
 .PHONY: help
 help:
 	@echo ""
@@ -21,27 +26,23 @@ help:
 	@echo "make help          📝 Show this help message"
 	@echo ""
 
-# Target: Start everything including observability
 .PHONY: start-all
 start-all:
 	@echo "🔧 Starting all services (including observability)..."
-	@$(DOCKER_COMPOSE) $(COMPOSE_FILES_OBS) up --build -d
+	@$(DC) $(COMPOSE_FILES_OBS) up --build -d
 
-# Target: Start only the core application services
 .PHONY: start-apps
 start-apps:
 	@echo "🚀 Starting application services only..."
-	@$(DOCKER_COMPOSE) $(COMPOSE_FILES) up --build -d
+	@$(DC) $(COMPOSE_FILES) up --build -d
 
-# Target: Bootstrap setup
 .PHONY: bootstrap
 bootstrap:
-	@echo "⚙️ Running bootstrap script..."
+	@echo "⚙️  Running bootstrap script..."
 	@bash scripts/bootstrap.sh
 
-# Target: Teardown all containers
 .PHONY: teardown
 teardown:
 	@echo "🧹 Tearing down all services..."
-	@$(DOCKER_COMPOSE) $(COMPOSE_FILES_OBS) down
+	@$(DC) $(COMPOSE_FILES_OBS) down
 

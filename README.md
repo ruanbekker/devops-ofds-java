@@ -180,3 +180,22 @@ Inter-Service Calls:
    - Handles both external and internal communication.
    - Provides a consistent access point to all services.
 
+## Observability
+
+To demonstrate a trace, we can demonstrate a call to the delivery-service by running the following:
+
+```bash
+./scripts/bootstrap.sh
+```
+
+### Traces
+
+Go to Grafana -> Explore, then select the following:
+
+- Tempo
+- Service Name: `api-gateway`
+- Span Name: `GET delivery-service`
+
+Search and select the latest trace id:
+
+![Image](https://github.com/user-attachments/assets/fd1804a3-383b-4a9d-a81c-9c116420c014)
