@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       routes:
@@ -30,6 +31,7 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+      team: backend
 
 logging:
   level:
