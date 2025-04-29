@@ -38,3 +38,10 @@ datasources:
         datasourceUid: tempo
       nodeGraph:
         enabled: true
+
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true

@@ -17,15 +17,18 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final RestTemplate restTemplate;
     private final Counter deliveriesCompletedCounter;
+    private final Counter deliveriesCreatedCounter;
 
     public DeliveryService(DeliveryRepository deliveryRepository, RestTemplate restTemplate, MeterRegistry meterRegistry) {
         this.deliveryRepository = deliveryRepository;
         this.restTemplate = restTemplate;
         this.deliveriesCompletedCounter = meterRegistry.counter("deliveries_completed_total");
+        this.deliveriesCreatedCounter = meterRegistry.counter("deliveries_created_total");
     }
 
     public Delivery createDelivery(Delivery delivery) {
         delivery.setStatus("Pending");
+        deliveriesCreatedCounter.increment();
         return deliveryRepository.save(delivery);
     }
 
@@ -49,8 +52,9 @@ public class DeliveryService {
 
     public Optional<Delivery> updateStatus(Long id, String status) {
         return deliveryRepository.findById(id).map(delivery -> {
-            delivery.setStatus(status.replaceAll("\"", ""));
-            if ("Completed".equalsIgnoreCase(delivery.getStatus())) {
+            String cleanStatus = status.replaceAll("\"", "").trim();
+            delivery.setStatus(cleanStatus);
+            if ("Completed".equalsIgnoreCase(cleanStatus)) {
                 deliveriesCompletedCounter.increment();
             }
             return deliveryRepository.save(delivery);
