@@ -49,9 +49,9 @@ public class DeliveryService {
 
     public Optional<Delivery> updateStatus(Long id, String status) {
         return deliveryRepository.findById(id).map(delivery -> {
-            delivery.setStatus(status.replaceAll("\"", "")); // clean up JSON quotes
+            delivery.setStatus(status.replaceAll("\"", ""));
             if ("Completed".equalsIgnoreCase(delivery.getStatus())) {
-                deliveriesCompletedCounter.increment(); // Increment counter on completed deliveries
+                deliveriesCompletedCounter.increment();
             }
             return deliveryRepository.save(delivery);
         });

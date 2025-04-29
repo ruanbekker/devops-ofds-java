@@ -30,7 +30,7 @@ public class OrderService {
         order.setDishName((String) request.get("dishName"));
         order.setStatus((String) request.get("status"));
         order.setRestaurantId(Long.parseLong(request.get("restaurantId").toString()));
-        orderCreatedCounter.increment(); // ✅ increment metric
+        orderCreatedCounter.increment();
         return orderRepository.save(order);
     }
 
