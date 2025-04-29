@@ -35,6 +35,16 @@ services:
     networks:
       - ofds-network
 
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: prometheus
+    volumes:
+      - ./configs/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - ofds-network
+
   #jaeger:
   #  image: jaegertracing/jaeger:2.4.0
   #  container_name: jaeger
