@@ -199,3 +199,14 @@ Go to Grafana -> Explore, then select the following:
 Search and select the latest trace id:
 
 ![Image](https://github.com/user-attachments/assets/fd1804a3-383b-4a9d-a81c-9c116420c014)
+
+### Dashboards
+
+From Dashboards, theres a `Demo Dashboard` displaying the following:
+
+- HTTP Requests
+- Orders Created over Time
+- Deliveries Created, Deliveries Completed and Orders Created per 15m window
+
+![Image](https://github.com/user-attachments/assets/eb52d6c3-0f5e-494a-bba8-45a26875a2a7)
+
