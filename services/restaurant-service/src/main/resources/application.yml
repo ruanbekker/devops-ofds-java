@@ -1,7 +1,10 @@
 server:
-  port: 8082
+  port: 8080
 
 spring:
+  application:
+    name: restaurant-service
+
   datasource:
     url: jdbc:postgresql://postgres:5432/ofds
     username: user
@@ -9,7 +12,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      team: backend
 
 logging:
   level:

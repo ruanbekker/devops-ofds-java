@@ -1,7 +1,10 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
+  application:
+    name: order-service
+
   datasource:
     url: jdbc:postgresql://localhost:5432/ofds
     username: user
@@ -9,8 +12,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      team: backend
 
 logging:
   level:

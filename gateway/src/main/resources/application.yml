@@ -4,23 +4,34 @@ server:
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       routes:
         - id: order-service
-          uri: http://order-service:8081
+          uri: http://order-service:8080
           predicates:
             - Path=/api/orders/**
 
         - id: restaurant-service
-          uri: http://restaurant-service:8082
+          uri: http://restaurant-service:8080
           predicates:
             - Path=/api/restaurants/**
 
         - id: delivery-service
-          uri: http://delivery-service:8083
+          uri: http://delivery-service:8080
           predicates:
             - Path=/api/deliveries/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      team: backend
 
 logging:
   level:

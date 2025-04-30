@@ -38,7 +38,7 @@ WORKDIR /app
 COPY --from=builder /app/services/order-service/build/libs/*.jar app.jar
 
 # Expose port
-EXPOSE 8081
+EXPOSE 8080
 
 # Switch to non-root user
 USER appuser

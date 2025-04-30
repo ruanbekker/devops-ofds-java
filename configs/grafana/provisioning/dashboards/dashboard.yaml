@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'dashboard'
+    orgId: 1
+    folder: 'Auto Imported'
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      allowUiUpdates: true
+
