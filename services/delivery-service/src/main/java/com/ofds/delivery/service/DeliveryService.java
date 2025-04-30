@@ -6,6 +6,8 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 @Service
 public class DeliveryService {
+    private static final Logger log = LoggerFactory.getLogger(DeliveryService.class);
 
     private final DeliveryRepository deliveryRepository;
     private final RestTemplate restTemplate;
@@ -54,7 +57,9 @@ public class DeliveryService {
         return deliveryRepository.findById(id).map(delivery -> {
             String cleanStatus = status.replaceAll("\"", "").trim();
             delivery.setStatus(cleanStatus);
-            if ("Completed".equalsIgnoreCase(cleanStatus)) {
+	    log.info("[debugger] Updating status to '{}'", cleanStatus);
+            if ("Delivered".equalsIgnoreCase(cleanStatus)) {
+		log.info("[debugger] Incrementing deliveries_completed_total counter");
                 deliveriesCompletedCounter.increment();
             }
             return deliveryRepository.save(delivery);
