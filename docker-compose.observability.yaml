@@ -72,6 +72,7 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
       - ./configs/grafana/provisioning:/etc/grafana/provisioning
+      - ./configs/grafana/dashboards:/etc/grafana/provisioning/dashboards/config
     networks:
       - ofds-network
     depends_on:
