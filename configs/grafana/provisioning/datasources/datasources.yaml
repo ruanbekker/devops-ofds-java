@@ -35,9 +35,11 @@ datasources:
         customQuery: true
         query: '{container_name="$${__container_name}", trace_id="$${__trace.trace_id}"}'
       serviceMap:
-        datasourceUid: tempo
+        datasourceUid: prometheus # tempo
       nodeGraph:
         enabled: true
+      streamingEnabled:
+        search: true
 
   - name: Prometheus
     type: prometheus
@@ -45,3 +47,5 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    jsonData:
+      httpMethod: GET
