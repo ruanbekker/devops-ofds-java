@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   loki:
-    image: grafana/loki:3.5.0 #2.9.4
+    image: grafana/loki:2.9.4 # 3.5.0
     container_name: loki
     command: -config.file=/etc/loki/local-config.yaml
     ports:
@@ -11,7 +11,7 @@ services:
       - ofds-network
 
   promtail:
-    image: grafana/promtail:2.9.4
+    image: grafana/promtail:2.9.4 #3.5.0
     container_name: promtail
     volumes:
       - ./configs/promtail/promtail-config.yaml:/etc/promtail/config.yaml
