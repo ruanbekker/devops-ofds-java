@@ -9,13 +9,15 @@ COPY ../../settings.gradle .
 COPY ../../build.gradle .
 
 # Pre-cache Gradle dependencies
-RUN gradle --no-daemon dependencies || true
+RUN gradle dependencies || true
+# RUN gradle --no-daemon dependencies || true
 
 # Copy the full project last (to avoid invalidating cache too early)
 COPY ../../ .
 
 # Only build the required module (skip tests)
-RUN gradle :services:order-service:bootJar -x test --no-daemon
+RUN gradle :services:order-service:bootJar -x test
+# RUN gradle :services:order-service:bootJar -x test --no-daemon
 
 
 # ------------ STAGE 2: Runtime Environment ------------
@@ -54,5 +56,8 @@ ENTRYPOINT ["java", "-javaagent:/opentelemetry-javaagent.jar", \
   "-Dotel.logs.exporter=none", \
   "-Dotel.exporter.otlp.endpoint=http://tempo:4318", \
   "-Dotel.exporter.otlp.protocol=http/protobuf", \
+  "-Dotel.profiling.enabled=true", \
+  "-Dotel.profiling.exporter=otlp", \
+  "-Dotel.exporter.otlp.profiling.endpoint=http://pyroscope:4040", \
   "-jar", "app.jar"]
 
