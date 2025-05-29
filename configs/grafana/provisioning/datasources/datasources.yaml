@@ -49,3 +49,11 @@ datasources:
     isDefault: true
     jsonData:
       httpMethod: GET
+
+  - name: Pyroscope
+    type: phlare
+    access: proxy
+    uid: pyroscope
+    url: http://pyroscope:4040
+    isDefault: false
+    editable: true

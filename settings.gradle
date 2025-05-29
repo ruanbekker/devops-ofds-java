@@ -1,3 +1,9 @@
 rootProject.name = 'ofds'
 include 'common', 'services:order-service', 'services:restaurant-service', 'services:delivery-service', 'gateway'
 
+buildCache {
+    local {
+        enabled = true
+    }
+}
+
