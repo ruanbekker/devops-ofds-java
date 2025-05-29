@@ -188,6 +188,25 @@ To demonstrate a trace, we can demonstrate a call to the delivery-service by run
 ./scripts/bootstrap.sh
 ```
 
+This project includes a complete observability stack using open source tools to monitor logs, metrics, traces, and performance profiles across all services.
+
+| Service        | Description                                                                                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Grafana**    | UI dashboard for visualizing metrics, logs, traces, and profiling data. Accessible at [http://localhost:3000](http://localhost:3000) .    |
+| **Prometheus** | Collects and scrapes metrics from instrumented services and exports them via HTTP. Metrics such as `orders_created_total`, `http_server_requests_seconds_count` are tracked here. |
+| **Loki**       | Aggregates and stores logs from services. Works together with Promtail and Grafana for log querying and correlation.                                                              |
+| **Promtail**   | Collects logs from containers and ships them to Loki. It attaches labels based on the Docker metadata.                                                                            |
+| **Tempo**      | Distributed tracing backend used to visualize service-to-service interactions and latency via traces and spans. Integrated with Grafana for service graph exploration.            |
+| **Pyroscope**  | Collects continuous profiling data (CPU, memory, etc.) from running services. Helps identify performance bottlenecks and resource usage patterns.                                 |
+
+### Observability Dashboard Highlights
+
+* **Metrics**: Real-time stats like request rates, error counts, and custom counters.
+* **Logs**: View service logs with filtering, full-text search, and log-to-trace correlation.
+* **Traces**: Visualize the lifecycle of requests across microservices.
+* **Profiling**: Analyze CPU and memory usage over time with flamegraphs and differential profiling.
+
+
 ### Traces
 
 Go to Grafana -> Explore, then select the following:
