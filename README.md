@@ -1,231 +1,218 @@
-# devops-ofds-java
+# 🍕 devops-ofds-java
 
-DevOps Project - Online Food Delivery System
+**DevOps Project – Online Food Delivery System**
 
-## Overview
-The Online Food Delivery System (OFDS) is a microservices-based application designed for demonstrating DevOps practices. It showcases inter-service communication, API gateway routing, and integration of multiple services using Java Spring Boot, Spring Cloud Gateway, Docker, and Docker Compose.
+---
 
-## Architecture
+## 🧭 Overview
 
-The system consists of the following components:
+The **Online Food Delivery System (OFDS)** is a microservices-based application demonstrating DevOps best practices. It showcases:
 
-1. API Gateway (Spring Cloud Gateway)
-   - Acts as a single entry point for all requests.
-   - Routes traffic to the appropriate backend service.
-   - Supports load balancing and centralized routing.
+* Inter-service communication
+* API Gateway routing
+* Observability with tracing, logging, metrics, and profiling
 
-2. Order Service (Spring Boot):
-   - Manages customer orders.
-   - Stores information such as customer name, dish, status, and restaurant ID.
-   - Fetches restaurant information from the Restaurant Service when retrieving an order.
+Built using **Java Spring Boot**, **Spring Cloud Gateway**, **Docker**, and **Docker Compose**.
 
-3. Restaurant Service (Spring Boot):
-   - Manages restaurant data including name, location, and cuisine type.
-   - Provides restaurant details based on restaurant ID.
+---
 
-4. Delivery Service (Spring Boot):
-   - Manages delivery details, including order ID, driver name, and status.
-   - Fetches order information from the **Order Service** when retrieving delivery details.
+## 🏗️ Architecture
 
-5. PostgreSQL Database:
-   - Stores data for each service separately.
-   - Uses Docker volumes for persistent storage.
+### 🔧 Components
 
-## Flow of a Typical Request
+1. **API Gateway (Spring Cloud Gateway)**
 
-1. The user makes an API request to the API Gateway.
-2. The API Gateway routes the request to the appropriate service:
-   - `/api/orders/**` -> Order Service
-   - `/api/restaurants/**` -> Restaurant Service
-   - `/api/deliveries/**` -> Delivery Service
-3. The Order Service may call the Restaurant Service to fetch restaurant details when displaying an order.
-4. The Delivery Service may call the Order Service to fetch order details when displaying a delivery.
-5. All inter-service communication goes through the API Gateway for consistency.
+   * Entry point for all requests
+   * Routes traffic to backend services
+   * Supports load balancing and centralized routing
 
-## Endpoints
+2. **Order Service**
 
-### Order Service
+   * Manages customer orders
+   * Stores customer name, dish, status, and restaurant ID
+   * Retrieves restaurant details from the Restaurant Service
 
-- Create Order:  
+3. **Restaurant Service**
 
-  ```bash
-  curl -X POST http://localhost:8080/api/orders -H "Content-Type: application/json" -d '{"customerName": "John", "dishName": "Pizza", "status": "Pending", "restaurantId": 1}'
-  ```
+   * Manages restaurant data: name, location, cuisine type
+   * Returns details for a given restaurant ID
 
-- List Orders:  
+4. **Delivery Service**
 
-  ```bash
-  curl http://localhost:8080/api/orders
-  ```
+   * Manages deliveries with order ID, driver name, and status
+   * Retrieves order details from the Order Service
 
-- Get Order by ID:  
+5. **PostgreSQL**
 
-  ```bash
-  curl http://localhost:8080/api/orders/1
-  ```
+   * Dedicated database per service
+   * Uses Docker volumes for persistence
 
-- Update Order Status:  
+---
 
-  ```bash
-  curl -X PUT http://localhost:8080/api/orders/1/status -H "Content-Type: application/json" -d 'Delivered'
-  ```
+## 🔁 Request Flow
 
-### Restaurant Service
+1. Client sends request to **API Gateway**
+2. Gateway routes based on URI:
 
-- Create Restaurant:  
+   * `/api/orders/**` → Order Service
+   * `/api/restaurants/**` → Restaurant Service
+   * `/api/deliveries/**` → Delivery Service
+3. **Order Service** may query **Restaurant Service**
+4. **Delivery Service** may query **Order Service**
+5. All inter-service calls go through the Gateway
 
-  ```bash
-  curl -X POST http://localhost:8080/api/restaurants -H "Content-Type: application/json" -d '{"name": "Pizza Palace", "location": "Cape Town", "cuisineType": "Italian"}'
-  ```
+---
 
-- List Restaurants:  
+## 📡 API Endpoints
 
-  ```bash
-  curl http://localhost:8080/api/restaurants
-  ```
+### 🧾 Order Service
 
-- Get Restaurant by ID:  
+```bash
+# Create Order
+curl -X POST http://localhost:8080/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"customerName": "John", "dishName": "Pizza", "status": "Pending", "restaurantId": 1}'
 
-  ```bash
-  curl http://localhost:8080/api/restaurants/1
-  ```
+# List Orders
+curl http://localhost:8080/api/orders
 
-### Delivery Service
+# Get Order by ID
+curl http://localhost:8080/api/orders/1
 
-- Create Delivery:  
+# Update Order Status
+curl -X PUT http://localhost:8080/api/orders/1/status \
+  -H "Content-Type: application/json" \
+  -d 'Delivered'
+```
 
-  ```bash
-  curl -X POST http://localhost:8080/api/deliveries -H "Content-Type: application/json" -d '{"orderId": 1, "driverName": "Jane", "status": "In Transit"}'
-  ```
+### 🍽️ Restaurant Service
 
-- List Deliveries:  
+```bash
+# Create Restaurant
+curl -X POST http://localhost:8080/api/restaurants \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Pizza Palace", "location": "Cape Town", "cuisineType": "Italian"}'
 
-  ```bash
-  curl http://localhost:8080/api/deliveries
-  ```
+# List Restaurants
+curl http://localhost:8080/api/restaurants
 
-- Get Delivery by ID:  
+# Get Restaurant by ID
+curl http://localhost:8080/api/restaurants/1
+```
 
-  ```bash
-  curl http://localhost:8080/api/deliveries/1
-  ```
+### 🚚 Delivery Service
 
-## Running the Application
+```bash
+# Create Delivery
+curl -X POST http://localhost:8080/api/deliveries \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": 1, "driverName": "Jane", "status": "In Transit"}'
 
-To start all services, run:
+# List Deliveries
+curl http://localhost:8080/api/deliveries
+
+# Get Delivery by ID
+curl http://localhost:8080/api/deliveries/1
+```
+
+---
+
+## ▶️ Running the App
+
+Start all services:
 
 ```bash
 docker-compose up --build
 ```
 
-To stop all services, run:
+Stop all services:
 
 ```bash
 docker-compose down -v
 ```
 
-## Project Structure
+---
+
+## 📁 Project Structure
 
 ```
 services/
+├── gateway/
 ├── order-service/
 ├── restaurant-service/
-├── delivery-service/
-└── gateway/
+└── delivery-service/
 ```
 
-## Architectural Diagram
+---
 
-Visual Representation of the Flow:
+## 🗺️ System Diagram
 
-![](https://github.com/user-attachments/assets/8aa58a1a-c1f2-48b3-95d5-4718a07d409c)
+**Architecture Overview:**
 
+![Diagram](https://github.com/user-attachments/assets/8aa58a1a-c1f2-48b3-95d5-4718a07d409c)
 
-Inter-Service Calls:
+### 🔄 Inter-Service Communication
 
-1. Order Service -> Restaurant Service:
-   - API Gateway routes request from /api/orders/{id} to /api/restaurants/{restaurantId}.
-   - Retrieves restaurant details when fetching an order.
+| From             | To                 | Description                                               |
+| ---------------- | ------------------ | --------------------------------------------------------- |
+| Order Service    | Restaurant Service | Fetches restaurant info when returning an order           |
+| Delivery Service | Order Service      | Fetches order info when returning a delivery              |
+| All              | API Gateway        | Routes requests internally and externally for consistency |
 
-2. Delivery Service -> Order Service:
-   - API Gateway routes request from /api/deliveries/{id} to /api/orders/{orderId}.
-   - Retrieves order details when fetching a delivery.
-
-3. API Gateway:
-   - Acts as a single entry point for all external and internal service communications.
-   - Ensures that inter-service calls follow the same path as external calls.
-
-## Explanation of Inter-Service Communication:
-
-1. Order Service -> Restaurant Service:
-
-   - When retrieving order details, the Order Service calls the Restaurant Service to get restaurant information.
-   - The call goes through the API Gateway for consistency:
-
-    ```bash
-    http://gateway:8080/api/restaurants/{restaurantId}
-    ```
-
-2. Delivery Service -> Order Service:
-
-   - When retrieving delivery details, the Delivery Service calls the Order Service to fetch order information.
-   - The call goes through the API Gateway:
-
-   ```bash
-   http://gateway:8080/api/orders/{orderId}
-   ```
-
-3. API Gateway:
-
-   - Handles both external and internal communication.
-   - Provides a consistent access point to all services.
-
-## Observability
-
-To demonstrate a trace, we can demonstrate a call to the delivery-service by running the following:
+Example:
 
 ```bash
-./scripts/bootstrap.sh
+http://gateway:8080/api/restaurants/{restaurantId}
+http://gateway:8080/api/orders/{orderId}
 ```
 
-This project includes a complete observability stack using open source tools to monitor logs, metrics, traces, and performance profiles across all services.
+---
 
-| Service        | Description                                                                                                                                                                       |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Grafana**    | UI dashboard for visualizing metrics, logs, traces, and profiling data. Accessible at [http://localhost:3000](http://localhost:3000) .    |
-| **Prometheus** | Collects and scrapes metrics from instrumented services and exports them via HTTP. Metrics such as `orders_created_total`, `http_server_requests_seconds_count` are tracked here. |
-| **Loki**       | Aggregates and stores logs from services. Works together with Promtail and Grafana for log querying and correlation.                                                              |
-| **Promtail**   | Collects logs from containers and ships them to Loki. It attaches labels based on the Docker metadata.                                                                            |
-| **Tempo**      | Distributed tracing backend used to visualize service-to-service interactions and latency via traces and spans. Integrated with Grafana for service graph exploration.            |
-| **Pyroscope**  | Collects continuous profiling data (CPU, memory, etc.) from running services. Helps identify performance bottlenecks and resource usage patterns.                                 |
+## 🔍 Observability
 
-### Observability Dashboard Highlights
+Run a complete observability stack to monitor logs, metrics, traces, and profiling:
 
-* **Metrics**: Real-time stats like request rates, error counts, and custom counters.
-* **Logs**: View service logs with filtering, full-text search, and log-to-trace correlation.
-* **Traces**: Visualize the lifecycle of requests across microservices.
-* **Profiling**: Analyze CPU and memory usage over time with flamegraphs and differential profiling.
+### 🚀 Bootstrap Demo Traffic
 
+```bash
+./scripts/simulate.py
+```
 
-### Traces
+### 🧰 Stack Overview
 
-Go to Grafana -> Explore, then select the following:
+| Service        | Description                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Grafana**    | Visualization layer for metrics, logs, traces, and profiling. [http://localhost:3000](http://localhost:3000) |
+| **Prometheus** | Scrapes and stores time-series metrics from services                                                         |
+| **Loki**       | Centralized log aggregation                                                                                  |
+| **Promtail**   | Ships container logs to Loki                                                                                 |
+| **Tempo**      | Collects and stores distributed traces                                                                       |
+| **Pyroscope**  | Continuous performance profiling (CPU, memory)                                                               |
 
-- Tempo
-- Service Name: `api-gateway`
-- Span Name: `GET delivery-service`
+### 📊 Dashboard Highlights
 
-Search and select the latest trace id:
+* Real-time metrics (e.g., request count, order status)
+* Structured logging with search
+* Distributed traces via Tempo
+* CPU/memory flamegraphs with Pyroscope
 
-![Image](https://github.com/user-attachments/assets/fd1804a3-383b-4a9d-a81c-9c116420c014)
+### 🔍 Viewing Traces
 
-### Dashboards
+* Go to **Grafana > Explore**
+* Select **Tempo** as data source
+* Filter by service name (e.g., `api-gateway`) and span name (`GET delivery-service`)
+* View traces and spans
 
-From Dashboards, theres a `Demo Dashboard` displaying the following:
+![Tempo Trace](https://github.com/user-attachments/assets/fd1804a3-383b-4a9d-a81c-9c116420c014)
 
-- HTTP Requests
-- Orders Created over Time
-- Deliveries Created, Deliveries Completed and Orders Created per 15m window
+### 📈 Dashboards
 
-![Image](https://github.com/user-attachments/assets/eb52d6c3-0f5e-494a-bba8-45a26875a2a7)
+Under **Dashboards > Demo Dashboard**, you’ll find:
+
+* HTTP request breakdown
+* Orders created over time
+* Deliveries created and completed
+
+![Grafana Dashboard](https://github.com/user-attachments/assets/eb52d6c3-0f5e-494a-bba8-45a26875a2a7)
+
 
