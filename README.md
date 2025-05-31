@@ -175,7 +175,7 @@ Run a complete observability stack to monitor logs, metrics, traces, and profili
 ### 🚀 Bootstrap Demo Traffic
 
 ```bash
-./scripts/bootstrap.sh
+./scripts/simulate.py
 ```
 
 ### 🧰 Stack Overview
